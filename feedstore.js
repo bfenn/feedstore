@@ -1,3 +1,5 @@
+// this is handy - http://jsonviewer.stack.hu/
+
 angular.module("FeedStore", []);
 
 angular.module('FeedStore').filter(
@@ -39,7 +41,6 @@ angular.module("FeedStore").controller(
 		function showFeed(feed) {
 			feedService.getPosts(feed.url).then(function(posts) {
 				console.log('in controller gotPosts...');
-				console.log(posts)
 				vm.currentFeed = JSON.parse(posts);
 			});
 		}
@@ -92,16 +93,13 @@ angular.module("FeedStore").factory(
 		function downloadFile(url, deferred) {
 			var xhr = new XMLHttpRequest(); 
 			xhr.open('GET', 'http://cletus.mooo.com/feedstore/getfeed.php?feed='+url, true); 
-			
 			xhr.onreadystatechange = function () { 
 			
 				if (xhr.readyState == 4) {
 					console.log('read of '+url);
 					if (xhr.response.length == 0) {
-						console.log('failed');
 						deferred.reject();
 					} else {
-						console.log('happy');
 						deferred.resolve(xhr.response);
 					}
 				}
