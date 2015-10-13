@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feeds>
+	<feed text="Coding Horror" url="http://feeds.feedburner.com/codinghorror/" />
+	<feed text="The Pirate Party - Know us, Like us, Vote for us" url="http://www.pirateparty.org.uk/feeds/latest/rss.xml" />
+	<feed text="The Daily WTF" url="http://syndication.thedailywtf.com/TheDailyWtf" />
+	<feed text="Science Weekly | The Guardian" url="http://www.guardian.co.uk/science/series/science/rss" />
+	<feed text="Sam Harris: Author, neuroscientist, philosopher." url="http://feeds.feedburner.com/SamHarris" />
+	<feed text="Comment is free | The Guardian" url="http://feeds.guardian.co.uk/theguardian/commentisfree/uk-edition/rss" />
+	<feed text="Schneier on Security" url="https://www.schneier.com/blog/atom.xml" />
+	<feed text="Hacker News" url="https://news.ycombinator.com/rss" />
+	<feed text="Robinince&apos;s Blog" url="http://robinince.wordpress.com/feed/" />
+	<feed text="Dan Carlin&apos;s Hardcore History" url="http://feeds.feedburner.com/dancarlin/history?format=xml" />
+	<feed text="Common Sense with Dan Carlin" url="http://feeds.feedburner.com/dancarlin/commonsense?format=xml" />
+	<feed text="SoylentNews" url="https://soylentnews.org/index.rss" />
+	<feed text="Scarfolk Council" url="http://scarfolk.blogspot.com/feeds/posts/default" />
+	<feed text="Jesus &amp; Mo" url="http://www.jesusandmo.net/feed/" />
+	<feed text="Saturday Morning Breakfast Cereal (updated daily)" url="http://www.smbc-comics.com/rss.php" />
+	<feed text="The Daily Mash" url="http://www.thedailymash.co.uk/rss.xml" />
+	<feed text="The Infinite Monkey Cage" url="http://downloads.bbc.co.uk/podcasts/radio4/timc/rss.xml" />
+	<feed text="xkcd.com" url="http://xkcd.com/rss.xml" />
+	<feed text="Friday Night Comedy from BBC Radio 4" url="http://downloads.bbc.co.uk/podcasts/radio4/fricomedy/rss.xml" />
+	<feed text="NewsThump" url="http://newsthump.com/feed/" />
+	<feed text="Richard Herring&apos;s Leicester Square Theatre Podcast" url="http://feeds.feedburner.com/RichardHerringLSTPodcast" />
+	<feed text="The Perry Bible Fellowship" url="http://pbfcomics.com/feed/feed.xml" />
+	<feed text="WTF, Evolution?!" url="http://wtfevolution.tumblr.com/rss" />
+</feeds>

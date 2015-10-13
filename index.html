@@ -1,0 +1,37 @@
+<!doctype html>
+<html ng-app="FeedStore">
+<head>
+    <meta charset="utf-8" />
+    <title>FeedStore</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"></link> 
+	<style>
+		body { padding: 20px; }
+	</style>
+</head>
+<body ng-controller="AppController as vm">
+    <h1>FeedStore</h1>
+    <h2>You have {{ vm.feeds.length }} feeds</h2>
+
+    <form ng-submit="vm.processForm()">
+
+        <input type="text" ng-model="vm.form.title" size="30" />
+        <input type="text" ng-model="vm.form.url" size="30" />
+        <input type="submit" value="Add Feed" />
+
+    </form>
+
+    <ul>
+        <li ng-repeat="feed in vm.feeds track by feed.id">
+            {{ feed.title }} ( <a ng-click="vm.showFeed(feed)">view</a> ) ( <a ng-click="vm.removeFeed(feed)">delete</a> )
+            
+        </li>
+    </ul>
+
+    <div>{{ vm.posts }}</div>
+
+    <!-- Load scripts. -->
+    <script type="text/javascript" src="lib/jquery.min.js"></script>
+   <script type="text/javascript" src="lib/angular.min.js"></script>
+    <script type="text/javascript" src="feedstore.js"></script>
+</body>
+</html>
