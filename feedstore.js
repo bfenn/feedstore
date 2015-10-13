@@ -1,12 +1,19 @@
 angular.module("FeedStore", []);
 
+angular.module('FeedStore').filter(
+	'to_trusted', ['$sce', function($sce) {
+		return function(test) {
+			return $sce.trustAsHtml(test);
+		};
+	}]);
+
 angular.module("FeedStore").controller(
 	"AppController",
 	function provideAppController($scope, $window, feedService) {
 		
 		var vm = this;
 		vm.feeds = [];
-		vm.posts = [];
+		vm.currentFeed = {"responseData": null, "responseDetails": null, "responseStatus": 400}
 		vm.form = {
 			title: "",
 			url: ""
@@ -33,7 +40,7 @@ angular.module("FeedStore").controller(
 			feedService.getPosts(feed.url).then(function(posts) {
 				console.log('in controller gotPosts...');
 				console.log(posts)
-				vm.posts = posts;
+				vm.currentFeed = JSON.parse(posts);
 			});
 		}
 		
@@ -84,7 +91,7 @@ angular.module("FeedStore").factory(
 
 		function downloadFile(url, deferred) {
 			var xhr = new XMLHttpRequest(); 
-			xhr.open('GET', 'http://cletus.mooo.com/getfeed.php?feed='+url, true); 
+			xhr.open('GET', 'http://cletus.mooo.com/feedstore/getfeed.php?feed='+url, true); 
 			
 			xhr.onreadystatechange = function () { 
 			

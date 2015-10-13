@@ -27,8 +27,18 @@
         </li>
     </ul>
 
-    <div>{{ vm.posts }}</div>
-
+	<div ng-switch on="vm.currentFeed.responseStatus">
+		<div ng-switch-when="200">
+			{{ vm.currentFeed.responseData.feed.title }}
+			<div ng-repeat="entry in vm.currentFeed.responseData.feed.entries">
+				{{entry.title}} - {{entry.publishedDate}}<br/>
+				<hr/>
+				<p ng-bind-html="entry.content | to_trusted"></p>
+				<hr/>
+			</div>
+		</div>
+	</div>
+	
     <!-- Load scripts. -->
     <script type="text/javascript" src="lib/jquery.min.js"></script>
    <script type="text/javascript" src="lib/angular.min.js"></script>
