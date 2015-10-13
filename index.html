@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <title>FeedStore</title>
-	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"></link> 
+	<link rel="stylesheet" type="text/css" href="lib/bootstrap.min.css"></link> 
 	<style>
 		body { padding: 20px; }
 	</style>
@@ -29,19 +29,20 @@
 
 	<div ng-switch on="vm.currentFeed.responseStatus">
 		<div ng-switch-when="200">
-			{{ vm.currentFeed.responseData.feed.title }}
+			<h2>{{ vm.currentFeed.responseData.feed.title }}</h2>
 			<div ng-repeat="entry in vm.currentFeed.responseData.feed.entries">
-				{{entry.title}} - {{entry.publishedDate}}<br/>
+				<a href='#' ng-click="showPost = !showPost">{{entry.title}}</a>
+				 {{entry.publishedDate}}
 				<hr/>
-				<p ng-bind-html="entry.content | to_trusted"></p>
+				<div ng-show="showPost" ng-bind-html="entry.content | to_trusted"><div>
 				<hr/>
 			</div>
 		</div>
 	</div>
 	
-    <!-- Load scripts. -->
-    <script type="text/javascript" src="lib/jquery.min.js"></script>
-   <script type="text/javascript" src="lib/angular.min.js"></script>
+    
+	<script type="text/javascript" src="lib/jquery.min.js"></script>
+	<script type="text/javascript" src="lib/angular.min.js"></script>
     <script type="text/javascript" src="feedstore.js"></script>
 </body>
 </html>
