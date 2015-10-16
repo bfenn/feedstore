@@ -1,0 +1,12 @@
+body { padding: 20px; }
+.feeds { float: left; width: 30%; }
+.feeds ul { list-style: none outside none; list-style-type: none; }
+
+.currentFeed { float: right; width: 66%; }
+.posts { margin-top: 10px; }
+
+.currentPost { float: right; width: 100%;  margin-top: 10px} 
+.unread { font-weight: bold; }
+.read { font-weight: normal; }
+.post { padding: 10px 0 10px 5px; overflow: hidden;}
+.postFooter { clear: both;}
