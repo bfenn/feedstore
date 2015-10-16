@@ -4,42 +4,47 @@
     <meta charset="utf-8" />
     <title>FeedStore</title>
 	<link rel="stylesheet" type="text/css" href="lib/bootstrap.min.css"></link> 
-	<style>
-		body { padding: 20px; }
-		.unread { font-weight: bolder; color: red; }
-		.read { font-weight: 100; color: green; }
-	</style>
+	<link rel="stylesheet" type="text/css" href="style.css"></link> 
 </head>
 <body ng-controller="AppController as vm">
-    <h1>FeedStore</h1>
-    <h2>You have {{ vm.feeds.length }} feeds</h2>
 
-    <form ng-submit="vm.processForm()">
-        <input type="text" ng-model="vm.form.url" size="30" />
-        <input type="submit" value="Add Feed" />
-    </form>
 
-    <ul>
-        <li ng-repeat="feed in vm.feeds">
-            {{ feed.title }} - <a ng-click="vm.showFeed(feed)">view</a> <span ng-show="feed.unreadCount>0">({{feed.unreadCount}} new)</span> - <a ng-click="vm.removeFeed(feed)">delete</a>  - <a ng-click="vm.updateFeed(feed)">update</a>
-        </li>
-    </ul>
-
-    <h2>{{ vm.currentFeed.title }}</h2>
-    {{ vm.currentFeed.url }}
-    <div ng-repeat="entry in vm.currentFeed.entries">
-        <a href='#' ng-click="showPost = !showPost;vm.readPost(entry.link)" ng-class="$entry.unread ? 'unread' : 'read'" >{{entry.title}}</a>
-        {{entry.publishedDate}}
-        {{entry.unread}}
-        <div ng-show="showPost">
-        <hr/>
-        <div ng-bind-html="entry.content | to_trusted"></div>
-        <a href="{{entry.link}}">{{entry.link}}</a>
-        <hr/>
-        </div>
-    </div>
+	<div class="feeds">
+	    <h4>Feeds</h4>
+		<ul class="list-group">
+			<li ng-repeat="feed in vm.feeds" class="feed" class="list-group-item">
+				<a ng-click="vm.showFeed(feed)">{{ feed.title }}</a>
+				<span ng-show="feed.unreadCount>0" class="badge">{{feed.unreadCount}}</span> 
+				<!--a ng-click="vm.removeFeed(feed)"><img src="img/trash.gif/>"</a-->
+			</li>
+		</ul>
+		
+		<form class="form-inline" ng-submit="vm.processForm()">
+			<input type="text" ng-model="vm.form.url" />
+			<input type="submit" value="Add Feed" />
+		</form>
+	</div>
 	
-    
+	<div class="currentFeed">
+		<h4>{{ vm.currentFeed.title }}</h4>
+		
+		<a href="{{ vm.currentFeed.url }}">{{ vm.currentFeed.url }}</a>
+		
+		<div class="posts">
+			<div ng-repeat="post in vm.currentFeed.entries">
+				<a ng-click="vm.readPost(post)" ng-class="post.unread ? 'unread' : 'read'" >{{post.title}}</a>
+				{{ post.publishedDate }}
+			</div>
+		</div>
+		
+		<div class="currentPost" ng-if="vm.currentPost">
+			<h2>{{vm.currentPost.title}}</h2>
+			<div class="post" ng-bind-html="vm.currentPost.content | to_trusted"></div>
+			<div class="postFooter"><a href="{{vm.currentPost.link}}">{{ vm.currentPost.link }}</a></div>
+			
+		</div>
+	</div>
+
 	<script type="text/javascript" src="lib/jquery.min.js"></script>
 	<script type="text/javascript" src="lib/angular.min.js"></script>
     <script type="text/javascript" src="feedstore.js"></script>

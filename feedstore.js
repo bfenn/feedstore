@@ -13,13 +13,14 @@ angular.module('FeedStore').filter(
 		};
 	}]);
 
+//angular.module('FeedStore', []).value('$anchorScroll', angular.noop);    
+    
 angular.module("FeedStore").controller(
 	"AppController",
 	function provideAppController($scope, $window, feedService) {
 		
 		var vm = this;
 		vm.feeds = [];
-		vm.currentFeed = {};
 		vm.form = {
 			url: ""
 		};
@@ -43,14 +44,20 @@ angular.module("FeedStore").controller(
 		
 		function showFeed(feed) {
 			vm.currentFeed = feed;
+            vm.currentPost = null;
 		}
 		
-        function readPost(postUrl) {
-            console.log('controller.readPost('+postUrl+')');
-            feedService.readPost(vm.currentFeed.url, postUrl).then(loadRemoteData);
+        function showPost(post) {
+            vm.currentPost = post;
+        }
+        
+        function readPost(post) {
+            console.log('controller.readPost('+JSON.stringify(post)+')');
+            feedService.readPost(vm.currentFeed.url, post.link).then(loadRemoteData).then(showPost(post));
         }
         
         function updateFeed(feed) {
+            console.log('controller.updateFeed');
             feedService.updateFeed(feed.url).then(loadRemoteData);
         }
         
@@ -59,8 +66,14 @@ angular.module("FeedStore").controller(
 		}
 
 		function loadRemoteData() {
+            console.log('loadRemoteData');
 			feedService.getFeeds().then(
-				function(feeds) { vm.feeds = feeds; }
+				function(feeds) { 
+					vm.feeds = feeds; 
+					vm.feeds.sort(function(a, b) {
+						return a.title.localeCompare(b.title);
+					});
+				}
 			);
 		}
 	}
@@ -99,8 +112,9 @@ angular.module("FeedStore").factory(
         
 		function addFeed(url) {
 			console.log('addFeed '+url);
+            var deferred = $q.defer();
 			downloadFile(url).then(createFeed).then(persistData);
-			return($q.when());
+			return deferred.promise;
 		}
 
         function updateFeed(url) {
@@ -110,7 +124,7 @@ angular.module("FeedStore").factory(
         }
         
 		function downloadFile(url) {
-			//console.log('downloadFile '+url);
+			console.log('downloadFile '+url);
 			var deferred = $q.defer();
 			var xhr = new XMLHttpRequest(); 
 			xhr.open('GET', 'http://cletus.mooo.com/feedstore/getfeed.php?feed='+url, true); 
@@ -121,6 +135,7 @@ angular.module("FeedStore").factory(
 					if (xhr.response.length === 0) {
 						deferred.reject();
 					} else {
+                        console.log('downloadFile OK');
 						deferred.resolve(JSON.parse(xhr.response));
 					}
 				}
@@ -130,6 +145,8 @@ angular.module("FeedStore").factory(
 		}
 		
 		function createFeed(response){
+            console.log('createFeed ');
+            var deferred = $q.defer();
 			if (response.responseStatus == 200) {
 				var feed = {
 					url : response.responseData.feed.feedUrl,
@@ -142,13 +159,17 @@ angular.module("FeedStore").factory(
                     feed.entries[i].unread = true;
                 }
 				feeds.push(feed);
+                deferred.resolve();
 				console.log('createFeed ', feeds.length);
-			}
+			} else {
+                deferred.reject();
+            }
 
-			return($q.when());
+			return deferred.promise;
 		}
 		
         function refreshFeed(response){
+            console.log('refreshFeed');
             if (response.responseStatus == 200) {
                 var found = findFeed(response.responseData.feed.feedUrl);
                 if (found > -1) {
@@ -164,8 +185,8 @@ angular.module("FeedStore").factory(
                         }
                         
                         if (!found) {
-							console.log('refreshFeed found new one');
                             var entry = angular.copy(response.responseData.feed.entries[i]);
+                            console.log('refreshFeed found new post ', entry.title, entry.publishedDate);
                             entry.unread = true;
                             feed.entries.push(entry);
                         }
@@ -198,13 +219,16 @@ angular.module("FeedStore").factory(
 		}
 		
 		function getFeeds() {
+            console.log('getFeeds');
 			return($q.when(angular.copy(feeds)));
 		}
 		
 		function persistData() {
+            var deferred = $q.defer();
 			console.log('persistData ',feeds.length);
 			localStorage.setItem('feeds', JSON.stringify(feeds));
-			return($q.when());
+            deferred.resolve();
+			return deferred.promise;
 		}
 		
 		function restoreData() {
