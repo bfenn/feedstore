@@ -6,6 +6,8 @@
 	<link rel="stylesheet" type="text/css" href="lib/bootstrap.min.css"></link> 
 	<style>
 		body { padding: 20px; }
+		.unread { font-weight: bolder; color: red; }
+		.read { font-weight: 100; color: green; }
 	</style>
 </head>
 <body ng-controller="AppController as vm">
@@ -19,20 +21,22 @@
 
     <ul>
         <li ng-repeat="feed in vm.feeds">
-            {{ feed.title }} ( <a ng-click="vm.showFeed(feed)">view</a> ) ( <a ng-click="vm.removeFeed(feed)">delete</a> )
+            {{ feed.title }} - <a ng-click="vm.showFeed(feed)">view</a> <span ng-show="feed.unreadCount>0">({{feed.unreadCount}} new)</span> - <a ng-click="vm.removeFeed(feed)">delete</a>  - <a ng-click="vm.updateFeed(feed)">update</a>
         </li>
     </ul>
 
     <h2>{{ vm.currentFeed.title }}</h2>
+    {{ vm.currentFeed.url }}
     <div ng-repeat="entry in vm.currentFeed.entries">
-        <a href='#' ng-click="showPost = !showPost">{{entry.title}}</a>
+        <a href='#' ng-click="showPost = !showPost;vm.readPost(entry.link)" ng-class="$entry.unread ? 'unread' : 'read'" >{{entry.title}}</a>
         {{entry.publishedDate}}
-        
+        {{entry.unread}}
         <div ng-show="showPost">
         <hr/>
         <div ng-bind-html="entry.content | to_trusted"></div>
+        <a href="{{entry.link}}">{{entry.link}}</a>
         <hr/>
-        <div>
+        </div>
     </div>
 	
     

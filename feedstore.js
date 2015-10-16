@@ -1,5 +1,5 @@
 // this is handy - http://jsonviewer.stack.hu/
-// https://ajax.googleapis.com/ajax/services/feed/load?v=2.0&q=http://www.jesusandmo.net/feed/
+// https://ajax.googleapis.com/ajax/services/feed/load?v=2.0&q=http://downloads.bbc.co.uk/podcasts/radio4/fricomedy/rss.xml
 // maybe this'll help - https://www.airpair.com/angularjs/posts/angularjs-promises
 // or this - http://www.peterbe.com/plog/promises-with-$http
 // mulitple args to a promise - http://stackoverflow.com/questions/17686612/rejecting-promises-with-multiple-arguments-like-http-in-angularjs
@@ -30,7 +30,9 @@ angular.module("FeedStore").controller(
 		vm.processForm = processForm;
 		vm.removeFeed = removeFeed;
 		vm.showFeed = showFeed;
-		
+		vm.readPost = readPost;
+        vm.updateFeed = updateFeed;
+        
 		function processForm() {
 			if (!vm.form.url) {
 				return;
@@ -43,17 +45,22 @@ angular.module("FeedStore").controller(
 			vm.currentFeed = feed;
 		}
 		
+        function readPost(postUrl) {
+            console.log('controller.readPost('+postUrl+')');
+            feedService.readPost(vm.currentFeed.url, postUrl).then(loadRemoteData);
+        }
+        
+        function updateFeed(feed) {
+            feedService.updateFeed(feed.url).then(loadRemoteData);
+        }
+        
 		function removeFeed(feed) {
 			feedService.deleteFeed(feed.url).then(loadRemoteData);
 		}
 
 		function loadRemoteData() {
 			feedService.getFeeds().then(
-				function(feeds) { 
-					vm.feeds = feeds; 
-					console.log('loadRemoteData got '+feeds.length + ' feeds');
-					console.log('vm.feeds has '+vm.feeds.length);
-				}
+				function(feeds) { vm.feeds = feeds; }
 			);
 		}
 	}
@@ -63,23 +70,47 @@ angular.module("FeedStore").factory(
 	"feedService",
 	function provideFeedService($q) {
 		var feeds = [];
-		restoreData();
-		console.log('feedService ctor '+feeds.length);
+		restoreData().then(function(){
+			console.log('feedService ctor '+feeds.length);
+		});
 		
 		return({
 			addFeed: addFeed,
+            updateFeed: updateFeed,
 			deleteFeed: deleteFeed,
 			getFeeds: getFeeds,
+            readPost: readPost
 		});
 
+        function readPost(feedUrl, postUrl) {
+            console.log('feedService.readPost('+feedUrl+', '+postUrl+')');
+            var i = findFeed(feedUrl);
+            if (i > -1) {
+                for (var j = 0; j < feeds[i].entries.length; j++) {
+                    if (feeds[i].entries[j].link === postUrl && feeds[i].entries[j].unread) {
+                        feeds[i].entries[j].unread = false;
+                        feeds[i].unreadCount--;
+                    }
+                }
+                persistData();
+            }
+            return($q.when());
+        }
+        
 		function addFeed(url) {
 			console.log('addFeed '+url);
 			downloadFile(url).then(createFeed).then(persistData);
 			return($q.when());
 		}
 
+        function updateFeed(url) {
+            console.log('updateFeed '+url);
+            downloadFile(url).then(refreshFeed).then(persistData);
+            return($q.when());
+        }
+        
 		function downloadFile(url) {
-			console.log('downloadFile '+url);
+			//console.log('downloadFile '+url);
 			var deferred = $q.defer();
 			var xhr = new XMLHttpRequest(); 
 			xhr.open('GET', 'http://cletus.mooo.com/feedstore/getfeed.php?feed='+url, true); 
@@ -99,33 +130,70 @@ angular.module("FeedStore").factory(
 		}
 		
 		function createFeed(response){
-
 			if (response.responseStatus == 200) {
-
 				var feed = {
 					url : response.responseData.feed.feedUrl,
 					title : response.responseData.feed.title,
-					entries : response.responseData.feed.entries
+					entries : response.responseData.feed.entries,
+                    unreadCount : response.responseData.feed.entries.length
 				};
 				
-				console.log('createFeed '+feed.title+' has '+feed.entries.length + ' entries');
-				
+                for (var i = 0; i < feed.entries.length; i++) {
+                    feed.entries[i].unread = true;
+                }
 				feeds.push(feed);
-				console.log('createFeed feeds = '+feeds.length);	
-				
+				console.log('createFeed ', feeds.length);
 			}
 
 			return($q.when());
 		}
 		
-		function deleteFeed(url) {
-			for (var i = 0, length = feeds.length ; i < length ; i++) {
-				if (feeds[i].url === url) {
-					feeds.splice(i, 1);
-					break;
-				}
+        function refreshFeed(response){
+            if (response.responseStatus == 200) {
+                var found = findFeed(response.responseData.feed.feedUrl);
+                if (found > -1) {
+                    var feed = feeds[found];
+                    for (var i = 0; i < response.responseData.feed.entries.length; i++)
+                    {
+                        var found = false;
+                        for (var j = 0; j < feed.entries.length; j++) {
+                            if (response.responseData.feed.entries[i].link === feed.entries[j].link) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        
+                        if (!found) {
+							console.log('refreshFeed found new one');
+                            var entry = angular.copy(response.responseData.feed.entries[i]);
+                            entry.unread = true;
+                            feed.entries.push(entry);
+                        }
+                    }
+                }
 			}
-			persistData();
+            return($q.when());
+        }
+        
+        function findFeed(url) {
+            console.log('findFeed '+url);
+   			for (var i = 0, length = feeds.length ; i < length ; i++) {
+				if (feeds[i].url === url) {
+                    console.log('found it at ' + i);
+                    return i;
+                }
+            }
+            console.log('could not find feed with url ' + url);
+            return -1;
+        }
+        
+		function deleteFeed(url) {
+            
+            var i = findFeed(url);
+            if (i > -1) {
+                feeds.splice(i, 1);
+                persistData();
+            }
 			return($q.when());
 		}
 		
@@ -134,22 +202,23 @@ angular.module("FeedStore").factory(
 		}
 		
 		function persistData() {
-			console.log('persistData');
+			console.log('persistData ',feeds.length);
 			localStorage.setItem('feeds', JSON.stringify(feeds));
 			return($q.when());
 		}
 		
 		function restoreData() {
-			console.log('restoreData '+JSON.stringify(feeds));
 			var data = localStorage.getItem('feeds');
 
 			if (data === null) {
-				console.log('nothing in localstorage');
+				console.log('restoreData - nothing in localstorage');
 				setDefault();
-				data = localStorage.getItem('feeds');
+				
 			} else {
 				feeds = JSON.parse(data);  
+                console.log('restoreData - ', feeds.length, ' feeds in localstorage');
 			}
+			return($q.when());
 		}
 		
 		function setDefault() {
@@ -179,10 +248,16 @@ angular.module("FeedStore").factory(
 				"http://pbfcomics.com/feed/feed.xml",
 				"http://wtfevolution.tumblr.com/rss" 
 				]; 
-				
-			defaults.forEach(function(url) {
-				addFeed(url);
+
+			var defer = $q.defer();
+			var promises = [];
+			
+			angular.forEach(defaults, function(url) {
+				promises.push(downloadFile(url).then(createFeed));
 			});
+			
+			$q.all(promises).then(persistData).then(defer.resolve());
+            return defer;
 		}
 	}
 );
