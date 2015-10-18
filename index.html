@@ -1,52 +1,53 @@
 <!doctype html>
-<html ng-app="FeedStore">
+<html ng-app='app'>
 <head>
-    <meta charset="utf-8" />
-    <title>FeedStore</title>
-	<link rel="stylesheet" type="text/css" href="lib/bootstrap.min.css"></link> 
-	<link rel="stylesheet" type="text/css" href="style.css"></link> 
+    <meta charset='utf-8' />
+    <title>Feed Store</title>
+    <link rel='stylesheet' type='text/css' href='bootstrap.min.css'></link> 
+    <link rel="stylesheet" type="text/css" href="style.css"></link> 
+    <script type='text/javascript' src='angular.min.js'></script>
+    <script type='text/javascript' src='controller.js'></script>
 </head>
-<body ng-controller="AppController as vm">
-
-
-	<div class="feeds">
-	    <h4>Feeds</h4>
-		<ul class="list-group">
-			<li ng-repeat="feed in vm.feeds" class="feed" class="list-group-item">
-				<a ng-click="vm.showFeed(feed)">{{ feed.title }}</a>
-				<span ng-show="feed.unreadCount>0" class="badge">{{feed.unreadCount}}</span> 
-				<!--a ng-click="vm.removeFeed(feed)"><img src="img/trash.gif/>"</a-->
-			</li>
-		</ul>
-		
-		<form class="form-inline" ng-submit="vm.processForm()">
-			<input type="text" ng-model="vm.form.url" />
-			<input type="submit" value="Add Feed" />
-		</form>
-	</div>
-	
-	<div class="currentFeed">
-		<h4>{{ vm.currentFeed.title }}</h4>
-		
-		<a href="{{ vm.currentFeed.url }}">{{ vm.currentFeed.url }}</a>
-		
+<body ng-controller='controller'> 
+    
+    <div id="left" class="feeds">
+        
+        <div class="feeds-list" >
+            <ul class="list-group">
+                <li ng-repeat='feed in feeds' class="feed" class="list-group-item">
+<!--span ng-show="feed.unreadCount>0" class="badge">{{feed.unreadCount}}</span--> 				
+                    <a ng-click='readFeed(feed)'>{{ feed.title }}</a> ( {{feed.unread}})
+                    <!--a ng-click="vm.removeFeed(feed)"><img src="img/trash.gif/>"</a-->
+                </li>
+            </ul>
+		</div>
+        
+        <form class='addpost form-inline' ng-submit='addFeed()'>
+            <input type='text' ng-model='formurl' />
+            <input type='submit' value='Add RSS Feed' />
+        </form>
+        
+    </div>
+    
+    <div id='right' ng-show='currentFeed'>
+        <h3>{{ currentFeed.title }} <a ng-click="updateFeed(currentFeed)" style="font-size: 0.7em">update</a></h3>
+        
 		<div class="posts">
-			<div ng-repeat="post in vm.currentFeed.entries">
-				<a ng-click="vm.readPost(post)" ng-class="post.unread ? 'unread' : 'read'" >{{post.title}}</a>
-				{{ post.publishedDate }}
-			</div>
+			<table class="table table-condensed">
+				<tr ng-repeat='post in currentFeed.entries' ng-class="post.unread ? 'warning' : 'meh'">
+				<td><a ng-click='readPost(post)' >{{post.title}}</a>{{post.read}}</td>
+				<!--td><p>{{ vm.formatDate(post.publishedDate) | date: 'EEE dd MMM hh:mm'}}</p></td-->
+				</tr>
+			</table>
 		</div>
-		
-		<div class="currentPost" ng-if="vm.currentPost">
-			<h2>{{vm.currentPost.title}}</h2>
-			<div class="post" ng-bind-html="vm.currentPost.content | to_trusted"></div>
-			<div class="postFooter"><a href="{{vm.currentPost.link}}">{{ vm.currentPost.link }}</a></div>
-			
-		</div>
-	</div>
 
-	<script type="text/javascript" src="lib/jquery.min.js"></script>
-	<script type="text/javascript" src="lib/angular.min.js"></script>
-    <script type="text/javascript" src="feedstore.js"></script>
+        <div ng-show='currentPost'>
+            <h1>{{currentPost.title}}</h1>
+            <div class="post" ng-bind-html="currentPost.content | to_trusted"></div>
+            <div class="postFooter"><a href="{{currentPost.link}}">{{ currentPost.link }}</a></div>
+        </div>
+
+    </div>
+    
 </body>
 </html>

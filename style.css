@@ -1,12 +1,29 @@
-body { padding: 20px; }
-.feeds { float: left; width: 30%; }
-.feeds ul { list-style: none outside none; list-style-type: none; }
+body { height: 100%; }
 
-.currentFeed { float: right; width: 66%; }
-.posts { margin-top: 10px; }
+.feeds { font-size: 0.9em; padding: 20px; height: 100%; border-right: 2px solid #ccc; }
+.feeds-list > ul { list-style: none outside none; list-style-type: none; }
+.currentFeed { margin-bottom: 20px; }
 
-.currentPost { float: right; width: 100%;  margin-top: 10px} 
+.posts { margin-top: 30px; font-size: 0.9em; margin-right: 20px; }
+.posts tr { font-size: 1.1em; }
+.currentPost { border-top: 2px solid #ccc; xfloat: right;  margin-top: 10px} 
+
 .unread { font-weight: bold; }
 .read { font-weight: normal; }
-.post { padding: 10px 0 10px 5px; overflow: hidden;}
+
+.post { padding: 20px 80px 10px 5px; overflow: hidden;}
 .postFooter { clear: both;}
+.addpost { margin-top: 20px; }
+
+#left {
+    resize: horizontal; overflow: auto;
+	float:left;
+	width:275px;
+}
+
+#right {
+	width: auto;
+    background: #eee;
+    overflow: hidden;
+}
+
