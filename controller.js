@@ -1,4 +1,3 @@
-
 angular.module('app', [])
    .controller('controller', function($scope, service) {
 
@@ -22,8 +21,10 @@ angular.module('app', [])
             $scope.currentPost = null;
         }
         
-        $scope.readPost = function(post) {
+        $scope.readPost = function(feed, post) {
             console.log('readPost', post);
+            $scope.currentFeed = feed;
+            $scope.currentPost = post;
             if (!post.read) {
                 if (isNaN($scope.currentFeed.unread)) {
                     $scope.currentFeed.unread = $scope.currentFeed.entries.length;
@@ -35,6 +36,10 @@ angular.module('app', [])
             post.read = true;
             $scope.currentPost = post;
             console.log('currentPost', post);
+        }
+        
+        $scope.formatDate = function(date) {
+            return new Date(date);
         }
         
         function newFeed(data) {
@@ -54,8 +59,10 @@ angular.module('app')
     .service('service', ['$q', '$http', function($q, $http) {
         
         var defaultFeeds = [
-            "http://downloads.bbc.co.uk/podcasts/radio4/fricomedy/rss.xml",
-            "http://www.jesusandmo.net/feed/"                    
+            'http://downloads.bbc.co.uk/podcasts/radio4/fricomedy/rss.xml',
+            'http://www.jesusandmo.net/feed/',
+            'http://wtfevolution.tumblr.com/rss',
+            'http://www.thedailymash.co.uk/rss.xml'
         ];
         
         // return saved data in localStorage, or a default set if not there
@@ -112,3 +119,31 @@ angular.module('app')
 		};
     }
 ]);
+
+/*
+
+"http://feeds.feedburner.com/codinghorror/",
+"http://xkcd.com/rss.xml",
+"http://scarfolk.blogspot.com/feeds/posts/default",
+"https://news.ycombinator.com/rss",
+"http://www.pirateparty.org.uk/feeds/latest/rss.xml" ,
+"http://syndication.thedailywtf.com/TheDailyWtf" ,
+"http://www.guardian.co.uk/science/series/science/rss" ,
+"http://feeds.feedburner.com/SamHarris" ,
+"http://feeds.guardian.co.uk/theguardian/commentisfree/uk-edition/rss" ,
+"https://www.schneier.com/blog/atom.xml" ,
+"http://robinince.wordpress.com/feed/" ,
+"http://feeds.feedburner.com/dancarlin/history?format=xml" ,
+"http://feeds.feedburner.com/dancarlin/commonsense?format=xml" ,
+"https://soylentnews.org/index.rss" ,
+"http://www.jesusandmo.net/feed/",
+"http://www.smbc-comics.com/rss.php" ,
+"http://www.thedailymash.co.uk/rss.xml" ,
+"http://downloads.bbc.co.uk/podcasts/radio4/timc/rss.xml" ,
+"http://downloads.bbc.co.uk/podcasts/radio4/fricomedy/rss.xml" ,
+"http://newsthump.com/feed/",
+"http://feeds.feedburner.com/RichardHerringLSTPodcast" ,
+"http://pbfcomics.com/feed/feed.xml",
+"http://wtfevolution.tumblr.com/rss",
+"http://feeds.feedburner.com/stuartgoldsmith"
+*/
