@@ -10,14 +10,17 @@ body { height: 100%; }
 }
 
 #right { 
-    padding: 10px; 
+    padding: 10px 20px 0 20px; 
     height:100vh;
     width: auto;
-    overflow: scroll; }
+    overflow: scroll; 
+    background: #ccc;
+}
 
 .unread { font-weight: bold; }
 .read { font-weight: normal; }
 
+.post { padding: 20px; background: white; }
 .postFooter { clear: both;}
 .addFeed { margin: 20px 0 20px 0; }
 

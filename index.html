@@ -5,7 +5,6 @@
     <title>Feed Store</title>
     <link rel='stylesheet' type='text/css' href='bootstrap.min.css'></link> 
     <link rel="stylesheet" type="text/css" href="style.css"></link> 
-    <script src='jquery-1.11.3.min.js' type='text/javascript'></script>    
     <script type='text/javascript' src='angular.min.js'></script>
     <script type='text/javascript' src='controller.js'></script>
     
@@ -18,13 +17,18 @@
             <input type='text' ng-model='formurl' />
             <input type='submit' value='Add' />
         </form>
+        
+        <a ng-click='updateFeeds()'>Update all</a><br/>
+        <a ng-click='markAllAsRead()'>Mark all as read</a><br/>
             
         <ul class='feed-menu'>
             <li ng-repeat='feed in feeds' class='feed-menu-item'>
-                <span>{{ feed.title }}</span>
+                <a ng-click='readFeed(feed)'>{{ feed.title }}</a> 
+                    <span ng-show='unreadPostsInFeed(feed)>0' > ({{ unreadPostsInFeed(feed) }}) </span>
 
-                <ul class='post-menu'>
-                    <li ng-class="post.read ? 'read' : 'unread'" ng-repeat='post in feed.entries' class='post-menu-item'>
+                <ul class='post-menu' ng-show='feed === currentFeed'>
+                    <li ng-class="postHasBeenRead(post) ? 'read' : 'unread'" 
+                        ng-repeat='post in feed.entries' class='post-menu-item'>
                         <span><a ng-click='readPost(feed, post)'>{{ post.title }}</a></span>
                     </li>
                 </ul>
@@ -34,27 +38,14 @@
     </div>
     
     <div id='right' ng-show='currentFeed'>
-        <h3>{{ currentFeed.title }} 
-            <a ng-click='updateFeed(currentFeed)' style='font-size: 0.7em'>update feed</a></h3>
-
-        <div ng-show='currentPost'>
+        
+        <h3>{{ currentFeed.title }} </h3>
+        <h4>{{ currentFeed.description }}</h4>    
+        <div class='post' ng-show='currentPost'>
             <h4>{{currentPost.title}}</h4>
             <div ng-bind-html='currentPost.content | to_trusted'></div>
             <div class='postFooter'><a href='{{currentPost.link}}'>{{ currentPost.link }}</a></div>
         </div>
-
     </div>
-<script type="text/javascript">
-	var hidemenus = function () {
-        //alert('@');
-		$('.post-menu').hide();
-		$('.feed-menu-item').click(function () {
-			$('.post-menu').hide();
-			$(this).children('.post-menu').show();
-		});
-	};
-    
-    setTimeout(hidemenus, 1500);
-</script>
 </body>
 </html>
