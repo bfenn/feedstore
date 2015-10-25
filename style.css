@@ -1,33 +1,50 @@
-body { height: 100%; }
+body { height: 100%; font-family:sans-serif; padding: 0; margin: 0; line-height: 1.5em;}
+a { cursor: pointer; }
 
 #left { 
     margin-left: 20px; 
-    resize: horizontal; overflow: auto;
+    padding-right: 5px; 
+    resize: horizontal; 
 	float:left;
-	width:300px;
+	width: 280px;
     height:100vh;
     border-right: 1px solid black;
+    overflow-x: hidden;
+    overflow-y: scroll; 
 }
 
 #right { 
     padding: 10px 20px 0 20px; 
     height:100vh;
     width: auto;
-    overflow: scroll; 
-    background: #ccc;
+    overflow-x: auto;
+    overflow-y: scroll; 
+    background: #ddd;
 }
 
 .unread { font-weight: bold; }
 .read { font-weight: normal; }
 
-.post { padding: 20px; background: white; }
-.postFooter { clear: both;}
+.remove-feed {float: right; }
+.post { 
+    padding : 20px; 
+    margin-bottom: 20px; 
+    background: white; 
+    border: 1px solid #bbb;}
+
+.feeds-header { font-size: 0.85em ; } 
+
 .addFeed { margin: 20px 0 20px 0; }
 
 .feed-menu { margin: 0; padding: 0; list-style-type: none; }
-.feed-menu > li { border-top: 1px dotted #ccc;}
-.feed-menu-item { margin-top: 15px; }
-.feed-menu-item > span { font-size: 1.1em; }
+.feed-menu > li { border-top: 1px dotted #ccc; }
+.feed-menu-item { margin-top: 15px; font-size: 0.9em;}
+.feed-menu-item > a { color: darkblue; }
+.feed-menu-item > span { font-size: 0.9em; }
 
-.post-menu { margin: 0; padding: 0}
-.post-menu-item > span { font-size: 0.9em; }
+.post-menu { margin: 10px 0 0 0; padding: 0; list-style-type: none; }
+.post-menu-item {text-overflow: ellipsis;white-space: nowrap; overflow: hidden}
+.post-menu-item > span { font-size: 0.8em; }
+.post-menu-item a { text-decoration: none; }
+.postFooter { clear: both;}
+.highlight { font-style: underline; }

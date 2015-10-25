@@ -3,33 +3,39 @@
 <head>
     <meta charset='utf-8' />
     <title>Feed Store</title>
-    <link rel='stylesheet' type='text/css' href='bootstrap.min.css'></link> 
+    
     <link rel="stylesheet" type="text/css" href="style.css"></link> 
-    <script type='text/javascript' src='angular.min.js'></script>
-    <script type='text/javascript' src='controller.js'></script>
+    <script type='text/javascript' src='js/angular.min.js'></script>
+    <script type='text/javascript' src='js/controller.js'></script>
+    <script type='text/javascript' src='js/service.js'></script>
     
 </head>
 <body ng-controller='controller'> 
     
     <div id='left'>
 
-        <form class='addFeed form-inline' ng-submit='addFeed()'>
-            <input type='text' ng-model='formurl' />
-            <input type='submit' value='Add' />
-        </form>
+        <div class='feeds-header'>
+            <form class='addFeed form-inline' ng-submit='addFeed()'>
+                <input type='text' ng-model='formurl' />
+                <input type='submit' value='Add' />
+            </form>
+
+            <a ng-click='updateFeeds()'>Update all</a><br/>
+            <a ng-click='markAllAsRead()'>Mark all as read</a><br/>
+        </div>
         
-        <a ng-click='updateFeeds()'>Update all</a><br/>
-        <a ng-click='markAllAsRead()'>Mark all as read</a><br/>
-            
         <ul class='feed-menu'>
             <li ng-repeat='feed in feeds' class='feed-menu-item'>
                 <a ng-click='readFeed(feed)'>{{ feed.title }}</a> 
                     <span ng-show='unreadPostsInFeed(feed)>0' > ({{ unreadPostsInFeed(feed) }}) </span>
+                    <a ng-click='removeFeed(feed)' class='remove-feed'>x</a>
 
                 <ul class='post-menu' ng-show='feed === currentFeed'>
                     <li ng-class="postHasBeenRead(post) ? 'read' : 'unread'" 
                         ng-repeat='post in feed.entries' class='post-menu-item'>
-                        <span><a ng-click='readPost(feed, post)'>{{ post.title }}</a></span>
+                        <span ng-class="post == currentPost ? 'highlight' : ''">
+                            <a ng-click='readPost(feed, post)'>{{ post.title }}</a>
+                        </span>
                     </li>
                 </ul>
             </li>
@@ -38,9 +44,10 @@
     </div>
     
     <div id='right' ng-show='currentFeed'>
-        
+        <h2 ng-show='loading'>Please wait ...</h2>
         <h3>{{ currentFeed.title }} </h3>
         <h4>{{ currentFeed.description }}</h4>    
+        <span>{{currentPost.publishedDate}}</span>
         <div class='post' ng-show='currentPost'>
             <h4>{{currentPost.title}}</h4>
             <div ng-bind-html='currentPost.content | to_trusted'></div>
