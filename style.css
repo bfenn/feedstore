@@ -30,7 +30,7 @@ a { cursor: pointer; }
     padding : 20px; 
     margin-bottom: 20px; 
     background: white; 
-    border: 1px solid #bbb;}
+    border: 1px solid #bbb; }
 
 .feeds-header { font-size: 0.85em ; } 
 
@@ -38,7 +38,7 @@ a { cursor: pointer; }
 
 .feed-menu { margin: 0; padding: 0; list-style-type: none; }
 .feed-menu > li { border-top: 1px dotted #ccc; }
-.feed-menu-item { margin-top: 15px; font-size: 0.9em;}
+.feed-menu-item { margin-top: 8px; font-size: 0.9em;}
 .feed-menu-item > a { color: darkblue; }
 .feed-menu-item > span { font-size: 0.9em; }
 

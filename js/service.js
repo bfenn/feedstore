@@ -1,5 +1,5 @@
 angular.module('app')
-    .service('service', ['$q', '$http', function ($q, $http) {
+    .service('service', ['$q', '$http', '$timeout', function ($q, $http, $timeout) {
         
         var defaultFeeds = [
             
@@ -30,25 +30,18 @@ angular.module('app')
 
         ];
         
-        
-        
         // return saved data in localStorage, or a default set if not there
         //
         this.loadFeeds = function () {
             console.log('loadFeeds');
-            var promises = [];
+            
             var feeds = defaultFeeds;
             var blob = localStorage.getItem('feeds');
             if (blob !== null) {
                 feeds = JSON.parse(blob);
             }
             
-            angular.forEach(feeds, function (url) {
-                var promise = getFeed(url);
-                promises.push(promise);
-            });
-
-            return $q.all(promises);
+            return feeds;
         };
         
         this.getFeed = getFeed;
@@ -63,7 +56,10 @@ angular.module('app')
                 .success(function (data) {
                     try {    
                         if (data.responseStatus == 200) {
-                            deferred.resolve(data.responseData.feed);
+                            $timeout(function(){
+                                deferred.resolve(data.responseData.feed);
+                            });
+                            
                         } else {
                             deferred.reject(data);
                         }

@@ -1,11 +1,9 @@
 angular.module('app', [])
-   .controller('controller', function ($timeout, $scope, service) {
+   .controller('controller', function ($timeout, $scope, $q, service) {
 
         'use strict';
-    
         var readPosts = {};
     
-        // page load
         $scope.init = function () {
             console.log('init');
             $scope.loading = true;
@@ -26,21 +24,34 @@ angular.module('app', [])
 
         $scope.updateFeeds = function () {
             console.log('updateFeeds');
-            service.loadFeeds().then(function (data){
-                data.sort(function (a, b) { 
+            $scope.feeds = [];
+            
+            var getAndLoadEachFeed = function(){
+                var promises = [];
+                angular.forEach(service.loadFeeds(), function(feed){
+                    
+                    var promise = service.getFeed(feed).then(function(feedData){
+                        $scope.feeds.push(feedData);
+                    });
+                    
+                    promises.push(promise);
+                });
+                return $q.all(promises);
+            }
+            
+            getAndLoadEachFeed().then(function(){
+                $scope.feeds.sort(function (a, b) { 
                     if (a.title > b.title) 
                         return 1;
-                    
+
                     if (a.title < b.title) 
                         return -1;
-                    
+
                     return 0;
                 });
-                
-                $scope.feeds = data; 
+
                 service.saveFeeds($scope.feeds);
-                readPosts = service.loadReadPosts();
-                $scope.loading = false;
+                readPosts = service.loadReadPosts();    
             });
         }; 
 
@@ -50,6 +61,7 @@ angular.module('app', [])
             else {
                 $scope.currentFeed = feed;
                 $scope.currentPost = feed.entries[0];
+                readPosts[$scope.currentPost.link] = true;
             }
         };
     
