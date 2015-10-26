@@ -10,15 +10,15 @@ a { cursor: pointer; }
     height:100vh;
     border-right: 1px solid black;
     overflow-x: hidden;
-    overflow-y: scroll; 
+    overflow-y: auto; 
 }
 
 #right { 
-    padding: 10px 20px 0 20px; 
+    padding: 0 20px 0 20px; 
     height:100vh;
     width: auto;
     overflow-x: auto;
-    overflow-y: scroll; 
+    overflow-y: auto; 
     background: #ddd;
 }
 
@@ -47,4 +47,4 @@ a { cursor: pointer; }
 .post-menu-item > span { font-size: 0.8em; }
 .post-menu-item a { text-decoration: none; }
 .postFooter { clear: both;}
-.highlight { font-style: underline; }
+.highlight { background: oldlace; }

@@ -18,7 +18,10 @@ angular.module('app', [])
                     $scope.feeds.push(data);
                     $scope.formurl = "";
                     service.saveFeeds($scope.feeds);
-                });    
+                })//.catch(function (fail) {
+                //    $scope.error = 'Failed!';
+                //})
+                ;    
             }
         };
 

@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app='app'>
+<html ng-app='app' ng-controller='controller'>
 <head>
     <meta charset='utf-8' />
     <title>Feed Store</title>
@@ -10,7 +10,7 @@
     <script type='text/javascript' src='js/service.js'></script>
     
 </head>
-<body ng-controller='controller'> 
+<body> 
     
     <div id='left'>
 
@@ -22,6 +22,7 @@
 
             <a ng-click='updateFeeds()'>Update all</a><br/>
             <a ng-click='markAllAsRead()'>Mark all as read</a><br/>
+            
         </div>
         
         <ul class='feed-menu'>
