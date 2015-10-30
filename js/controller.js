@@ -1,4 +1,4 @@
-angular.module('app', [])
+angular.module('app', ['mc.resizer'])
    .controller('controller', function ($timeout, $scope, $q, service) {
 
         'use strict';
@@ -65,6 +65,7 @@ angular.module('app', [])
                 $scope.currentFeed = feed;
                 $scope.currentPost = feed.entries[0];
                 readPosts[$scope.currentPost.link] = true;
+                service.saveReadPosts(readPosts);
             }
         };
     

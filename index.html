@@ -4,15 +4,16 @@
     <meta charset='utf-8' />
     <title>Feed Store</title>
     
-    <link rel="stylesheet" type="text/css" href="style.css"></link> 
-    <script type='text/javascript' src='js/angular.min.js'></script>
+    <script type='text/javascript' src='js/angular-1.3.3.min.js'></script>
+    <script type='text/javascript' src='js/jquery-2.0.3.min.js'></script>
     <script type='text/javascript' src='js/controller.js'></script>
     <script type='text/javascript' src='js/service.js'></script>
-    
+    <script type='text/javascript' src='js/resizer.js'></script>
+
+    <link type='text/css' rel='stylesheet' href='style.css'></link> 
 </head>
 <body> 
-    
-    <div id='left'>
+    <div id='sidebar'>
 
         <div class='feeds-header'>
             <form class='addFeed form-inline' ng-submit='addFeed()'>
@@ -27,10 +28,15 @@
         
         <ul class='feed-menu'>
             <li ng-repeat='feed in feeds' class='feed-menu-item'>
-                <a ng-click='readFeed(feed)'>{{ feed.title }}</a> 
-                    <span ng-show='unreadPostsInFeed(feed)>0' > ({{ unreadPostsInFeed(feed) }}) </span>
-                    <a ng-click='removeFeed(feed)' class='remove-feed'>x</a>
-
+                <div class='feed-menu-item-header'>
+                    <span class='feed-menu-item-left'>
+                        <a ng-click='readFeed(feed)'>{{ feed.title }}</a> 
+                        <span ng-show='unreadPostsInFeed(feed)>0' > ({{ unreadPostsInFeed(feed) }}) </span>
+                    </span>
+                    <span class='feed-menu-item-right'>
+                        <img src='img/stop.png' ng-click='removeFeed(feed)' class='remove-feed'/>
+                    </span>
+                </div>
                 <ul class='post-menu' ng-show='feed === currentFeed'>
                     <li ng-class="postHasBeenRead(post) ? 'read' : 'unread'" 
                         ng-repeat='post in feed.entries' class='post-menu-item'>
@@ -41,19 +47,34 @@
                 </ul>
             </li>
         </ul>
+        
+        <a download="feeds.txt" ng-href="{{ downloadFeeds }}">Export feed list</a>
 
     </div>
     
-    <div id='right' ng-show='currentFeed'>
-        <h2 ng-show='loading'>Please wait ...</h2>
-        <h3>{{ currentFeed.title }} </h3>
-        <h4>{{ currentFeed.description }}</h4>    
-        <span>{{currentPost.publishedDate}}</span>
+    <div id='main' ng-show='currentFeed'>
+        <div class='post-header'>
+            <h3>{{ currentFeed.title }} </h3>
+            <h4>{{ currentFeed.description }}</h4>    
+            <span>{{currentPost.publishedDate}} - {{currentFeed.feedUrl}}</span>
+        </div>
         <div class='post' ng-show='currentPost'>
             <h4>{{currentPost.title}}</h4>
             <div ng-bind-html='currentPost.content | to_trusted'></div>
-            <div class='postFooter'><a href='{{currentPost.link}}'>{{ currentPost.link }}</a></div>
+            <div class='post-footer'><a href='{{currentPost.link}}'>{{ currentPost.link }}</a></div>
         </div>
+        
+        
     </div>
+    
+    <div id='sidebar-resizer' 
+  		resizer='vertical' 
+  		resizer-width='6' 
+  		resizer-left='#sidebar' 
+  		resizer-right='#main'
+  		resizer-max='800'
+        resizer-min='20'>
+  	</div>
+    
 </body>
 </html>

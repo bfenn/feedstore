@@ -14,7 +14,7 @@ if (file_exists($cachefile) && (time()-filemtime($cachefile)) < 3600) {
     return;
 }
 
-file_put_contents($cachefile, file_get_contents('https://ajax.googleapis.com/ajax/services/feed/load?v=2.0&q='.$_REQUEST['feed'].'&num=25'));
+file_put_contents($cachefile, file_get_contents('https://ajax.googleapis.com/ajax/services/feed/load?v=2.0&q='.$_REQUEST['feed'].'&num=300'));
 echo file_get_contents($cachefile);
 
 ?>

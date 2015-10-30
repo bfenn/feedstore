@@ -1,50 +1,47 @@
 body { height: 100%; font-family:sans-serif; padding: 0; margin: 0; line-height: 1.5em;}
 a { cursor: pointer; }
 
-#left { 
-    margin-left: 20px; 
-    padding-right: 5px; 
-    resize: horizontal; 
-	float:left;
-	width: 280px;
-    height:100vh;
-    border-right: 1px solid black;
-    overflow-x: hidden;
-    overflow-y: auto; 
-}
-
-#right { 
-    padding: 0 20px 0 20px; 
-    height:100vh;
-    width: auto;
-    overflow-x: auto;
-    overflow-y: auto; 
-    background: #ddd;
-}
-
 .unread { font-weight: bold; }
 .read { font-weight: normal; }
 
-.remove-feed {float: right; }
-.post { 
-    padding : 20px; 
-    margin-bottom: 20px; 
-    background: white; 
-    border: 1px solid #bbb; }
 
-.feeds-header { font-size: 0.85em ; } 
+.post-header { padding-left: 5px;}
+.post { margin: 10px; padding: 10px; background: white; border: 1px solid #bbb; }
+.post-footer { clear: both; }
+
+.feeds-header { padding-left: 5px; font-size: 0.85em ; } 
 
 .addFeed { margin: 20px 0 20px 0; }
 
-.feed-menu { margin: 0; padding: 0; list-style-type: none; }
+.feed-menu { margin: 10px; padding: 0; list-style-type: none; }
 .feed-menu > li { border-top: 1px dotted #ccc; }
 .feed-menu-item { margin-top: 8px; font-size: 0.9em;}
-.feed-menu-item > a { color: darkblue; }
-.feed-menu-item > span { font-size: 0.9em; }
+
+.feed-menu-item-header { display: flex; align-content: stretch; }
+
+.feed-menu-item-left { flex-grow: 150;}
+.feed-menu-item-left > a { color: darkblue; }
+.feed-menu-item-left > span { font-size: 0.9em; }
+
+.feed-menu-item-right { flex-grow: 1;}
+.remove-feed { cursor: pointer; }
 
 .post-menu { margin: 10px 0 0 0; padding: 0; list-style-type: none; }
-.post-menu-item {text-overflow: ellipsis;white-space: nowrap; overflow: hidden}
+.post-menu-item { text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
 .post-menu-item > span { font-size: 0.8em; }
 .post-menu-item a { text-decoration: none; }
-.postFooter { clear: both;}
+
 .highlight { background: oldlace; }
+
+#sidebar {
+	background-color: #EEE;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 300px;
+    overflow: auto;
+}
+#main { position: absolute; top: 0; bottom: 0; left: 306px; right: 0; overflow: auto; background: #ddd; }
+#sidebar-resizer { background-color: #fff; position: absolute; top: 0; bottom: 0; left: 300px; width: 6px; cursor: e-resize; }
+#sidebar-resizer:hover, #preview-resizer:hover { background-color: #666; }
